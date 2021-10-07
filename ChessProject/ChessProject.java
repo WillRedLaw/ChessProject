@@ -187,13 +187,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		putting the piece back on the board.
 	*/
     public void mouseReleased(MouseEvent e) {
-        if(chessPiece == null) return;
+		if (chessPiece == null) return;
 
-        chessPiece.setVisible(false);
-		Boolean success =false;
-        Component c =  chessBoard.findComponentAt(e.getX(), e.getY());
+		chessPiece.setVisible(false);
+		Boolean success = false;
+		Component c = chessBoard.findComponentAt(e.getX(), e.getY());
 		String tmp = chessPiece.getIcon().toString();
-		String pieceName = tmp.substring(0, (tmp.length()-4));
+		String pieceName = tmp.substring(0, (tmp.length() - 4));
 		Boolean validMove = false;
 
 		/*
@@ -208,38 +208,47 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			demonstration purposes the Pawn here turns into a Queen.
 		*/
 
-		int LandingX = (e.getX()/75);
-		int LandingY = (e.getY()/75);
-		int MovementX = Math.abs((e.getX()/75)-startX);
-		int MovementY = Math.abs((e.getY()/75)-startY);
+		int LandingX = (e.getX() / 75);
+		int LandingY = (e.getY() / 75);
+		int MovementX = Math.abs((e.getX() / 75) - startX);
+		int MovementY = Math.abs((e.getY() / 75) - startY);
 
 		System.out.println("---------------");
 		System.out.println("The Moved piece is : " + pieceName);
 		System.out.println("The starting coordinates are : " + startX + "," + startY);
 		System.out.println("The MovementX is : " + MovementX);
 		System.out.println("The MovementY is : " + MovementY);
-		System.out.println("The Landing coordinates are : " + ("( "+ LandingX + "," + LandingY + " )"));
+		System.out.println("The Landing coordinates are : " + ("( " + LandingX + "," + LandingY + " )"));
 		System.out.println("---------------");
 
-		if(pieceName.equals("BlackQueen")){
+		if (pieceName.equals("BlackQueen")) {
 			validMove = true;
-		}
-
-		else if (pieceName.equals("BlackKing")){
+		} else if (pieceName.equals("BlackKing")) {
 			validMove = true;
-		}
-
-		else if (pieceName.equals("BlackRook")){
+		} else if (pieceName.equals("BlackRook")) {
 			validMove = true;
-		}
-
-		else if (pieceName.equals("BlackBishup")){
+		} else if (pieceName.equals("BlackBishup")) {
 			validMove = true;
 		}
 // BLACK KNIGHT --------------------------------------------------------------------------------------------
-		else if (pieceName.equals("BlackKnight")){
-			validMove = true;
+		else if (pieceName.contains("Knight")) {
+			if ((((MovementX == 1) && MovementY == 2)) || ((MovementX == 2) && (MovementY == 1))) {
+				if (!piecePresent(e.getX(), e.getY())) {
+					validMove = true;
+				} else {
+					if (pieceName.contains("White")) {
+						if (checkWhiteOponent(e.getX(), e.getY())) {
+							validMove = true;
+						}
+					} else {
+						if (checkBlackOponent(e.getX(), e.getY())) {
+							validMove = true;
+						}
+					}
+				}
+			}
 		}
+
 // BLACK KNIGHT --------------------------------------------------------------------------------------------
 // BLACK PAWN ----------------------------------------------------------------------------------------------
 		else if (pieceName.equals("BlackPawn")){
