@@ -228,61 +228,63 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		}
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
-			Boolean PieceInTheWay = false;
+			boolean PieceInTheWay = false;
+			int DistanceX = Math.abs(startX - LandingX);
+			int DistanceY = Math.abs(startY - LandingY);
 
-			if(((LandingX <0) || (LandingX >0) ||(LandingY < 0) ||(LandingY > 7))){
-				validMove = false;
-			}//End of first If
+
+			if(((LandingX <0) || LandingX > 7)||((LandingY <0) || (LandingY >7))){
+					validMove = false;
+			}
 
 			else{
-				if(((Math.abs(startX - LandingX) !=0) &&(Math.abs(startY - LandingY) ==0)) ||((Math.abs(startX - LandingX) ==0)&&(Math.abs(LandingY - startY)!=0))) {
+				if(((Math.abs(startX - LandingX) !=0) &&(Math.abs(startY - LandingY) ==0)) ||((Math.abs(startX - LandingX) ==0)&&(Math.abs(startY - LandingY)!=0))) {
 					if (Math.abs(startX - LandingX) != 0) {
-						int xMovement = Math.abs(startX - LandingX);
-						if (startX - LandingX < 0) {
-							for (int i = 0; i < xMovement; i++) {
+						if (startX - LandingX > 0) {
+							for (int i = 0; i < DistanceX; i++) {
 								if (piecePresent(initialX - (i * 75), e.getY())) {
 									PieceInTheWay = true;
-									break;
+
 								} else {
 									PieceInTheWay = false;
 								}
 							}
 						} else {
-							for (int i = 0; i < xMovement; i++) {
+							for (int i = 0; i < DistanceX; i++) {
 								if (piecePresent(initialX + (i * 75), e.getY())) {
 									PieceInTheWay = true;
-									break;
+
 								} else {
 									PieceInTheWay = false;
 								}
 							}
 						}
 					} else {
-						int yMovement = Math.abs(startY - LandingY);
-						if (startY - LandingY < 0) {
-							for (int i = 0; i < yMovement; i++) {
+						if (startY - LandingY > 0) {
+							for (int i = 0; i < DistanceY; i++) {
 								if (piecePresent(e.getX(), initialY - (i * 75))) {
 									PieceInTheWay = true;
-									break;
+
 								} else {
 									PieceInTheWay = false;
 								}
 							}
 						} else {
-							for (int i = 0; i < yMovement; i++) {
+							for (int i = 0; i < DistanceY; i++) {
 								if (piecePresent(e.getX(), initialY + (i * 75))) {
 									PieceInTheWay = true;
-									break;
+
 								} else {
 									PieceInTheWay = false;
 								}
 							}
 						}
 					}
-
 					if (PieceInTheWay) {
 						validMove = false;
-					} else {
+					}
+
+					else {
 						if (piecePresent(e.getX(), e.getY())) {
 							if (pieceName.contains("White")) {
 								if (checkWhiteOponent(e.getX(), e.getY())) {
@@ -313,7 +315,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 		else if(pieceName.contains("Bishup")){
 
-			Boolean PieceInTheWay = false;
+			boolean PieceInTheWay = false;
 			int Distance = Math.abs(startX-LandingX);
 
 			if(((LandingX < 0 ) ||(LandingX > 7)) || ((LandingY < 0) || (LandingY > 7))){
@@ -321,37 +323,35 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			}
 			else if (Math.abs(startX-LandingX) == Math.abs(startY - LandingY)){
 				if((startX- LandingX < 0) &&(startY - LandingY < 0)){
-					for(int i = 0; i > Distance; i++){
-						if(!piecePresent((initialX + (i*75)), (initialY + (i*75)))){
+					for(int i = 0; i < Distance; i++){
+						if(piecePresent((initialX + (i*75)), (initialY + (i*75)))){
 							PieceInTheWay = true;
-							break;
+
 						}
 					}
 				}
 
+
 				else if((startX-LandingX<0)&&(startY-LandingY > 0)){
-					for(int i = 0; i > Distance; i++){
-						if(!piecePresent((initialX + (i*75)), (initialY + (i*75)))){
+					for(int i = 0; i < Distance; i++){
+						if(piecePresent((initialX + (i*75)), (initialY - (i*75)))){
 							PieceInTheWay = true;
-							break;
 						}
 					}
 				}
 
 				else if((startX - LandingX > 0) &&(startY - LandingY > 0)){
-					for(int i = 0; i > Distance; i++){
-						if(!piecePresent((initialX + (i*75)), (initialY + (i*75)))){
+					for(int i = 0; i < Distance; i++){
+						if(piecePresent((initialX - (i*75)), (initialY - (i*75)))){
 							PieceInTheWay = true;
-							break;
 						}
 					}
 				}
 
 				else if((startX - LandingX >0) && (startY - LandingY < 0)){
-					for(int i = 0; i > Distance; i++){
-						if(!piecePresent((initialX + (i*75)), (initialY + (i*75)))){
+					for(int i = 0; i < Distance; i++){
+						if(piecePresent((initialX - (i*75)), (initialY + (i*75)))){
 							PieceInTheWay = true;
-							break;
 						}
 					}
 				}
