@@ -207,12 +207,13 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			If a Pawn makes it to the top of the other side, the Pawn can turn into any other piece, for
 			demonstration purposes the Pawn here turns into a Queen.
 		*/
-
+// Variables
 		int LandingX = (e.getX() / 75);
 		int LandingY = (e.getY() / 75);
 		int MovementX = Math.abs((e.getX() / 75) - startX);
 		int MovementY = Math.abs((e.getY() / 75) - startY);
-
+// Variables
+//Test Output
 		System.out.println("---------------");
 		System.out.println("The Moved piece is : " + pieceName);
 		System.out.println("The starting coordinates are : " + startX + "," + startY);
@@ -220,12 +221,138 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("The MovementY is : " + MovementY);
 		System.out.println("The Landing coordinates are : " + ("( " + LandingX + "," + LandingY + " )"));
 		System.out.println("---------------");
+//Test Output
 
-		if (pieceName.equals("BlackQueen")) {
-			validMove = true;
-		} else if (pieceName.equals("BlackKing")) {
+
+		if (pieceName.contains("Queen")) {
+
+			boolean PieceInTheWay = false;
+			int DistanceX = Math.abs(startX - LandingX);
+			int DistanceY = Math.abs(startY - LandingY);
+
+			if(((LandingX <0) || LandingX > 7)||((LandingY <0) || (LandingY >7))){
+				validMove = false;
+			}
+
+			else{
+				if(((Math.abs(startX - LandingX) !=0) &&(Math.abs(startY - LandingY) ==0)) ||((Math.abs(startX - LandingX) ==0)&&(Math.abs(startY - LandingY)!=0))){
+					if (Math.abs(startX - LandingX) != 0) {
+						if (startX - LandingX > 0) {
+							for (int i = 0; i < DistanceX; i++) {
+								if (piecePresent(initialX - (i * 75), e.getY())) {
+									PieceInTheWay = true;
+
+								} else {
+									PieceInTheWay = false;
+								}
+							}
+						}
+						else {
+							for (int i = 0; i < DistanceX; i++) {
+								if (piecePresent(initialX + (i * 75), e.getY())) {
+									PieceInTheWay = true;
+
+								} else {
+									PieceInTheWay = false;
+								}
+							}
+						}
+					}
+					else {
+						if (startY - LandingY > 0) {
+							for (int i = 0; i < DistanceY; i++) {
+								if (piecePresent(e.getX(), initialY - (i * 75))) {
+									PieceInTheWay = true;
+
+								} else {
+									PieceInTheWay = false;
+								}
+							}
+						}
+
+						else {
+							for (int i = 0; i < DistanceY; i++) {
+								if (piecePresent(e.getX(), initialY + (i * 75))) {
+									PieceInTheWay = true;
+
+								} else {
+									PieceInTheWay = false;
+								}
+							}
+						}
+					}
+				}//End of Forward Back Left Right Movement
+
+				if((Math.abs(startX-LandingX) == Math.abs(startY - LandingY))){
+					if((startX- LandingX < 0) &&(startY - LandingY < 0)){
+						for(int i = 0; i < DistanceX; i++){
+							if(piecePresent((initialX + (i*75)), (initialY + (i*75)))){
+								PieceInTheWay = true;
+
+							}
+						}
+					}
+					else if((startX-LandingX<0)&&(startY-LandingY > 0)){
+						for(int i = 0; i < DistanceX; i++){
+							if(piecePresent((initialX + (i*75)), (initialY - (i*75)))){
+								PieceInTheWay = true;
+							}
+						}
+					}
+					else if((startX - LandingX > 0) &&(startY - LandingY > 0)){
+						for(int i = 0; i < DistanceX; i++){
+							if(piecePresent((initialX - (i*75)), (initialY - (i*75)))){
+								PieceInTheWay = true;
+							}
+						}
+					}
+					else if((startX - LandingX >0) && (startY - LandingY < 0)){
+						for(int i = 0; i < DistanceX; i++){
+							if(piecePresent((initialX - (i*75)), (initialY + (i*75)))){
+								PieceInTheWay = true;
+							}
+						}
+					}
+				}//End of Diagnoal Movement
+
+				if(PieceInTheWay){
+					validMove = false;
+				}
+
+				else{
+					if(piecePresent(e.getX(), (e.getY()))){
+						if(pieceName.contains("White")){
+							if(checkWhiteOponent(e.getX(), e.getY())){
+								validMove = true;
+							}
+
+							else{
+								validMove = false;
+							}
+						}
+
+						else{
+							if(checkBlackOponent(e.getX(), e.getY())){
+								validMove = true;
+							}
+							else{
+								validMove = false;
+							}
+						}
+					}
+					else{
+						validMove = true;
+					}
+				}
+
+
+			}//END OF FIRST ELSE
+		}// END OF QUEEN LINE
+
+		else if (pieceName.contains("King")) {
 			validMove = true;
 		}
+
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
 			boolean PieceInTheWay = false;
@@ -446,17 +573,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			}
 		}
 //BLACK PAWN ----------------------------------------------------------------------------------------
-		else if (pieceName.equals("WhiteQueen")){
-			validMove = true;
-		}
-
-		else if (pieceName.equals("WhiteKing")){
-			validMove = true;
-		}
-
-		else if (pieceName.equals("WhiteRook")){
-			validMove = true;
-		}
 
 
 //White Pawn ----------------------------------------------------------------------------------------
