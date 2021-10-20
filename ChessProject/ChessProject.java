@@ -354,11 +354,26 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 			}//END OF FIRST ELSE
 		}// END OF QUEEN LINE
-
+//King ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("King")) {
+
+			Boolean PieceInTheWay = false;
+
+			if((MovementX >=2) || (MovementY >=2)){
+				validMove = false;
+			}
+
+			else if(((MovementX == 1) && (MovementY == 0 )) || ((MovementX == 0) && (MovementY ==1))){
+					validMove = true;
+			}
+
+
+		else if((MovementX == 1) && (MovementY == 1)) {
 			validMove = true;
 		}
 
+		}
+//King ----------------------------------------------------------------------------------------------
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
 			boolean PieceInTheWay = false;
