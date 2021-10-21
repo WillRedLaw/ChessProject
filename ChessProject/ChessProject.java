@@ -152,30 +152,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return oponent;
 	}
 
-	private Boolean CheckIfKingAlive(int newX, int newY){
-
-		Boolean CheckKingAlive;
-
-		pieces.getComponent(59);
-		pieces.getComponent(3);
-
-		if(CheckKingAlive = true){
-			//do nothing
-		}
-
-		if (CheckKingAlive = false){
-			/*if(pieces.contains("BlackKing")){
-
-			}
-			else if (pieces.contains(("WhiteKing"))){
-
-			}*/
-		}
-
-		return CheckKingAlive;
-	}
-
-
 	/*
 		This method is called when we press the Mouse. So we need to find out what piece we have
 		selected. We may also not have selected a piece!
@@ -210,13 +186,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		This method is used when the Mouse is released...we need to make sure the move was valid before
 		putting the piece back on the board.
 	*/
-
-
     public void mouseReleased(MouseEvent e) {
 		if (chessPiece == null) return;
 
 		chessPiece.setVisible(false);
-		Boolean success = false;
+		Boolean successWhitePawn = false;
+		Boolean successBlackPawn = false;
 		Component c = chessBoard.findComponentAt(e.getX(), e.getY());
 		String tmp = chessPiece.getIcon().toString();
 		String pieceName = tmp.substring(0, (tmp.length() - 4));
@@ -228,7 +203,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 			So a Pawn is able to move two squares forward one its first go but only one square after that.
 			The Pawn is the only piece that cannot move backwards in chess...so be careful when committing
-			a pawn forward. A Pawn is able to take any of the opponent’s pieces, but they have to be one
+			a pawn forward. A Pawn is able to take any of the opponent’s pieces but they have to be one
 			square forward and one square over, i.e. in a diagonal direction from the Pawns original position.
 			If a Pawn makes it to the top of the other side, the Pawn can turn into any other piece, for
 			demonstration purposes the Pawn here turns into a Queen.
@@ -238,6 +213,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		int LandingY = (e.getY() / 75);
 		int MovementX = Math.abs((e.getX() / 75) - startX);
 		int MovementY = Math.abs((e.getY() / 75) - startY);
+		Scanner PawnUpgrade = new Scanner(System.in);
+
 // Variables
 //Test Output
 		System.out.println("---------------");
@@ -247,12 +224,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("The MovementY is : " + MovementY);
 		System.out.println("The Landing coordinates are : " + ("( " + LandingX + "," + LandingY + " )"));
 		System.out.println("---------------");
-
-		Component k1 = chessPiece.findComponentAt(1, 1);
-
 //Test Output
-
-
 
 
 		if (pieceName.contains("Queen")) {
@@ -388,43 +360,22 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 //King ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("King")) {
 
-			Boolean NotInCheck = false;
-			int DistanceX = Math.abs(startX - LandingX);
+			Boolean PieceInTheWay = false;
 
 			if((MovementX >=2) || (MovementY >=2)){
 				validMove = false;
 			}
 
-			else if(MovementX != MovementY || MovementX >= 1){
-				if(!piecePresent(e.getX(), (e.getY()))){
-					NotInCheck = true;
-				}
-
-				if(NotInCheck){
+			else if(((MovementX == 1) && (MovementY == 0 )) || ((MovementX == 0) && (MovementY ==1))){
 					validMove = true;
-				}
+			}
 
-				else if(NotInCheck){
-					for(int i = 0; i <LandingX+1; i++  ){
 
-					}
+		else if((MovementX == 1) && (MovementY == 1)) {
+			validMove = true;
+		}
 
-				}
-
-				else{
-					if(pieceName.contains("White")){
-						if(checkWhiteOponent(e.getX(), (e.getY()))){
-							validMove = true;
-						}
-					}
-					else{
-						if(checkBlackOponent(e.getX(), e.getY())){
-							validMove = true;
-						}
-					}
-				}
-			}// end else if
-		}//king end
+		}
 //King ----------------------------------------------------------------------------------------------
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
@@ -630,6 +581,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					if(piecePresent(e.getX(), e.getY())){
 						if(checkBlackOponent(e.getX(), e.getY())){
 							validMove = true;
+							if(startY==1){
+								successBlackPawn = true;
+
+							}
 						}
 					}
 				}
@@ -644,6 +599,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					if(piecePresent(e.getX(), e.getY())){
 						if(checkBlackOponent(e.getX(), e.getY())){
 							validMove = true;
+							if(startY == 1){
+								successBlackPawn=true;
+							}
 						}
 					}
 				}
@@ -677,7 +635,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 						if(checkWhiteOponent(e.getX(), e.getY())){
 							validMove = true;
 							if(startY == 6){
-								success = true;
+								successWhitePawn = true;
 							}
 						}
 
@@ -685,11 +643,12 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 							validMove = false;
 						}
 					}
+
 					else{
 						if(!piecePresent(e.getX(), (e.getY()))){
 							if((startX == (e.getX()/75))&&((e.getY()/75)-startY)==1){
 								if(startY == 6){
-									success = true;
+									successWhitePawn = true;
 								}
 								validMove = true;
 							}
@@ -721,23 +680,176 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			pieces = new JLabel( new ImageIcon(pieceLocation) );
 			panels = (JPanel)chessBoard.getComponent(location);
 		    panels.add(pieces);
+
 		}
 		else{
-			if(success){
+			if(successWhitePawn){
 				int location = 56 + (e.getX()/75);
-				if (c instanceof JLabel){
-	            	Container parent = c.getParent();
-	            	parent.remove(0);
-					pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-					parent = (JPanel)chessBoard.getComponent(location);
-			    	parent.add(pieces);
+
+				System.out.println("What Piece do you want to change the Pawn into ?");
+				System.out.println("Queen : 1");
+				System.out.println("Bishop : 2");
+				System.out.println("Knight : 3");
+				System.out.println("Rook : 4");
+				int UserInput = PawnUpgrade.nextInt();
+
+				if(UserInput == 1){
+
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
 				}
-				else{
-					Container parent = (Container)c;
-	            	pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-					parent = (JPanel)chessBoard.getComponent(location);
-			    	parent.add(pieces);
+
+				if(UserInput == 2){
+
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
 				}
+
+				if(UserInput == 3){
+
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("WhiteKnight.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("WhiteKnight.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+				}
+
+				if(UserInput == 4){
+
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("WhiteRook.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("WhiteRook.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+				}
+			}
+
+			else if (successBlackPawn){
+				int location = 0 + (e.getX()/75);
+				System.out.println("What Piece do you want to change the Pawn into ?");
+				System.out.println("Queen : 1");
+				System.out.println("Bishop : 2");
+				System.out.println("Knight : 3");
+				System.out.println("Rook : 4");
+				int UserInput = PawnUpgrade.nextInt();
+
+
+				if(UserInput == 1){
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("BlackQueen.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("BlackQueen.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+
+				}
+				if(UserInput == 2){
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("BlackBishup.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("BlackBishup.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+
+				}
+
+				if(UserInput == 3){
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("BlackKnight.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("BlackKnight.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+
+				}
+
+				if(UserInput == 4){
+					if (c instanceof JLabel){
+						Container parent = c.getParent();
+						parent.remove(0);
+						pieces = new JLabel( new ImageIcon("BlackRook.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+					}
+					else{
+						Container parent = (Container)c;
+						pieces = new JLabel( new ImageIcon("BlackRook.png") );
+						parent = (JPanel)chessBoard.getComponent(location);
+						parent.add(pieces);
+
+					}
+
+				}
+
+
+
+
 			}
 			else{
 				if (c instanceof JLabel){
@@ -770,10 +882,11 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		Main method that gets the ball moving.
 	*/
     public static void main(String[] args) {
+
         JFrame frame = new ChessProject();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
         frame.pack();
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
      }
