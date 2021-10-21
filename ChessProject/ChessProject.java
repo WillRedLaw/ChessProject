@@ -186,6 +186,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		This method is used when the Mouse is released...we need to make sure the move was valid before
 		putting the piece back on the board.
 	*/
+	public void KingOnBoard(){
+
+	}
+
     public void mouseReleased(MouseEvent e) {
 		if (chessPiece == null) return;
 
@@ -222,6 +226,8 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("The Landing coordinates are : " + ("( " + LandingX + "," + LandingY + " )"));
 		System.out.println("---------------");
 //Test Output
+
+
 
 
 		if (pieceName.contains("Queen")) {
@@ -357,22 +363,43 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 //King ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("King")) {
 
-			Boolean PieceInTheWay = false;
+			Boolean NotInCheck = false;
+			int DistanceX = Math.abs(startX - LandingX);
 
 			if((MovementX >=2) || (MovementY >=2)){
 				validMove = false;
 			}
 
-			else if(((MovementX == 1) && (MovementY == 0 )) || ((MovementX == 0) && (MovementY ==1))){
+			else if(MovementX != MovementY || MovementX >= 1){
+				if(!piecePresent(e.getX(), (e.getY()))){
+					NotInCheck = true;
+				}
+
+				if(NotInCheck){
 					validMove = true;
-			}
+				}
 
+				else if(NotInCheck){
+					for(int i = 0; i <LandingX+1; i++  ){
 
-		else if((MovementX == 1) && (MovementY == 1)) {
-			validMove = true;
-		}
+					}
 
-		}
+				}
+
+				else{
+					if(pieceName.contains("White")){
+						if(checkWhiteOponent(e.getX(), (e.getY()))){
+							validMove = true;
+						}
+					}
+					else{
+						if(checkBlackOponent(e.getX(), e.getY())){
+							validMove = true;
+						}
+					}
+				}
+			}// end else if
+		}//king end
 //King ----------------------------------------------------------------------------------------------
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
@@ -721,7 +748,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         JFrame frame = new ChessProject();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
         frame.pack();
-        frame.setResizable(true);
+        frame.setResizable(false);
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
      }
