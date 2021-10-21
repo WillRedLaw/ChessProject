@@ -152,6 +152,30 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		return oponent;
 	}
 
+	private Boolean CheckIfKingAlive(int newX, int newY){
+
+		Boolean CheckKingAlive;
+
+		pieces.getComponent(59);
+		pieces.getComponent(3);
+
+		if(CheckKingAlive = true){
+			//do nothing
+		}
+
+		if (CheckKingAlive = false){
+			/*if(pieces.contains("BlackKing")){
+
+			}
+			else if (pieces.contains(("WhiteKing"))){
+
+			}*/
+		}
+
+		return CheckKingAlive;
+	}
+
+
 	/*
 		This method is called when we press the Mouse. So we need to find out what piece we have
 		selected. We may also not have selected a piece!
@@ -186,9 +210,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		This method is used when the Mouse is released...we need to make sure the move was valid before
 		putting the piece back on the board.
 	*/
-	public void KingOnBoard(){
 
-	}
 
     public void mouseReleased(MouseEvent e) {
 		if (chessPiece == null) return;
@@ -206,7 +228,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 			So a Pawn is able to move two squares forward one its first go but only one square after that.
 			The Pawn is the only piece that cannot move backwards in chess...so be careful when committing
-			a pawn forward. A Pawn is able to take any of the opponent’s pieces but they have to be one
+			a pawn forward. A Pawn is able to take any of the opponent’s pieces, but they have to be one
 			square forward and one square over, i.e. in a diagonal direction from the Pawns original position.
 			If a Pawn makes it to the top of the other side, the Pawn can turn into any other piece, for
 			demonstration purposes the Pawn here turns into a Queen.
@@ -225,6 +247,9 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("The MovementY is : " + MovementY);
 		System.out.println("The Landing coordinates are : " + ("( " + LandingX + "," + LandingY + " )"));
 		System.out.println("---------------");
+
+		Component k1 = chessPiece.findComponentAt(1, 1);
+
 //Test Output
 
 
