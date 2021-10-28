@@ -25,6 +25,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	String KingRemovedFromBoard;
 
 
+
 	public ChessProject(){
         Dimension boardSize = new Dimension(600, 600);
 
@@ -220,6 +221,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		String pieceName = tmp.substring(0, (tmp.length() - 4));
 		Boolean validMove = false;
 
+
 		/*
 			The only piece that has been enabled to move is a White Pawn...but we should really have this is a separate
 			method somewhere...how would this work.
@@ -249,7 +251,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		System.out.println("---------------");
 //Test Output
 
-
+//Queen ---------------------------------------------------------------------------------------------
 		if (pieceName.contains("Queen")) {
 
 			boolean PieceInTheWay = false;
@@ -380,67 +382,45 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 			}//END OF FIRST ELSE
 		}// END OF QUEEN LINE
-//King ----------------------------------------------------------------------------------------- -----
+//King ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("King")) {
+		if(!piecePresent(e.getX(), e.getY())){
+			if (pieceName.contains("BlackKing")) {
 
-			if(pieceName.contains("BlackKing")){
-				if((MovementX >=2) || (MovementY >=2)){
+				if ((MovementX >= 2) || (MovementY >= 2)) {
 					validMove = false;
-				}
+				} else if (((MovementX == 1) && (MovementY == 0)) || ((MovementX == 0) && (MovementY == 1))) {
 
-				else if(((MovementX == 1) && (MovementY == 0 )) || ((MovementX == 0) && (MovementY ==1))){
-
-					if((pieceAround((e.getX()+75), e.getY()).contains("White"))||(pieceAround((e.getX()-75), e.getY()).contains("White"))||(pieceAround((e.getX()),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()), (e.getY()-75)).contains("White"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("White"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("White"))){
-						if((pieceAround((e.getX()+75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()-75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Bishup"))){
+					if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
+						if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
 							validMove = false;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Rook"))||(pieceAround((e.getX()-75), e.getY()).contains("Rook"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Rook"))){
+						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
 							validMove = false;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Knight"))||(pieceAround((e.getX()-75), e.getY()).contains("Knight"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Knight"))){
+						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
 							validMove = true;
-						}
-
-
-						else{
+						} else {
 							validMove = false;
 						}
-					}
-
-					else if(!piecePresent(e.getX(), e.getY())){
+					} else if (!piecePresent(e.getX(), e.getY())) {
 						validMove = true;
 					}
-				}
+				} else if ((MovementX == 1) && (MovementY == 1)) {
 
-				else if((MovementX == 1) && (MovementY == 1)) {
-
-					if((pieceAround((e.getX()+75), e.getY()).contains("White"))||(pieceAround((e.getX()-75), e.getY()).contains("White"))||(pieceAround((e.getX()),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()), (e.getY()-75)).contains("White"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("White"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("White"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("White"))){
-						if((pieceAround((e.getX()+75), e.getY()).contains("Rook"))||(pieceAround((e.getX()-75), e.getY()).contains("Rook"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Rook"))){
+					if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
+						if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
 							validMove = true;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()-75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Bishup"))){
-							if((pieceAround((e.getX()+75), e.getY()).contains("WhitePawn"))||(pieceAround((e.getX()-75), e.getY()).contains("WhitePawn"))||(pieceAround((e.getX()),(e.getY()+75)).contains("WhitePawn"))||(pieceAround((e.getX()), (e.getY()-75)).contains("WhitePawn"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("WhitePawn"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("WhitePawn"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("WhitePawn"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("WhitePawn"))){
+						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
+							if ((pieceAround((e.getX() + 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX() - 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("WhitePawn"))) {
+								validMove = false;
+							} else {
 								validMove = false;
 							}
-
-							else{
-								validMove = false;
-							}
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Knight"))||(pieceAround((e.getX()-75), e.getY()).contains("Knight"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Knight"))){
+						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
 							validMove = true;
-						}
-
-						else{
+						} else {
 							validMove = false;
 						}
-					}
-
-					else if(!piecePresent(e.getX(), e.getY())){
+					} else if (!piecePresent(e.getX(), e.getY())) {
 						validMove = true;
 					}
 				}
@@ -495,10 +475,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 						else if((pieceAround((e.getX()+75), e.getY()).contains("Knight"))||(pieceAround((e.getX()-75), e.getY()).contains("Knight"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Knight"))){
 							validMove = true;
 						}
-
-						else{
-							validMove = false;
-						}
 					}
 
 					else if(!piecePresent(e.getX(), e.getY())){
@@ -506,8 +482,39 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 					}
 				}
 			}
-
 		}
+			if(piecePresent(e.getX(), e.getY())){
+				if((MovementX >=2) || (MovementY >=2)){
+					validMove = false;
+				}
+				else {
+					if (piecePresent(e.getX(), e.getY())) {
+						if (pieceName.contains("White")) {
+							if (checkWhiteOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if((pieceAround((e.getX()+75), e.getY()).contains("King"))||(pieceAround((e.getX()-75), e.getY()).contains("King"))||(pieceAround((e.getX()),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()), (e.getY()-75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("King"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("King"))){
+									validMove = false;
+								}
+
+							} else {
+								validMove = false;
+							}
+						} else {
+							if (checkBlackOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if((pieceAround((e.getX()+75), e.getY()).contains("King"))||(pieceAround((e.getX()-75), e.getY()).contains("King"))||(pieceAround((e.getX()),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()), (e.getY()-75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("King"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("King"))){
+									validMove = false;
+								}
+							} else {
+								validMove = false;
+							}
+						}
+					} else {
+						validMove = true;
+					}
+				}
+			}
+		}//End of King lines
 //King ----------------------------------------------------------------------------------------------
 //Rook ----------------------------------------------------------------------------------------------
 		else if (pieceName.contains("Rook")) {
@@ -599,7 +606,6 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		//END ELSE IF CONTAINS
 //Rook ----------------------------------------------------------------------------------------------
 //Bishop --------------------------------------------------------------------------------------------
-
 		else if(pieceName.contains("Bishup")){
 
 			boolean PieceInTheWay = false;
@@ -964,7 +970,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 
 				}
 			}
-			
+
 			else{
 				if (c instanceof JLabel){
 	            	Container parent = c.getParent();
@@ -976,7 +982,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	            	parent.add( chessPiece );
 	        	}
 	    		chessPiece.setVisible(true);
-				
+
 				if(KingRemovedFromBoard != null){
 					JOptionPane.showMessageDialog(null, KingRemovedFromBoard);
 					System.exit(0);
