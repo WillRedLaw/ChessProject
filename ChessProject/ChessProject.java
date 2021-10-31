@@ -23,6 +23,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	JPanel panels;
 	JLabel pieces;
 	String KingRemovedFromBoard;
+	Boolean PlayerTurn = false;
 
 
 
@@ -211,6 +212,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		putting the piece back on the board.
 	*/
     public void mouseReleased(MouseEvent e) {
+
 		if (chessPiece == null) return;
 
 		chessPiece.setVisible(false);
@@ -233,6 +235,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			If a Pawn makes it to the top of the other side, the Pawn can turn into any other piece, for
 			demonstration purposes the Pawn here turns into a Queen.
 		*/
+
 // Variables
 		int LandingX = (e.getX() / 75);
 		int LandingY = (e.getY() / 75);
@@ -252,334 +255,100 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 //Test Output
 
 //Queen ---------------------------------------------------------------------------------------------
-		if (pieceName.contains("Queen")) {
+			if (pieceName.contains("Queen")) {
 
-			boolean PieceInTheWay = false;
-			int DistanceX = Math.abs(startX - LandingX);
-			int DistanceY = Math.abs(startY - LandingY);
+				boolean PieceInTheWay = false;
+				int DistanceX = Math.abs(startX - LandingX);
+				int DistanceY = Math.abs(startY - LandingY);
 
-			if((((MovementX >=1) && MovementY >= 1)) && (MovementX != MovementY))
+				if ((((MovementX >= 1) && MovementY >= 1)) && (MovementX != MovementY))
 //				LandingX >= 1 && Landing >=2 && LandingX != LandingY
-			{
-				validMove = false;
-			}
-			// Forward Back LEFT RIGHT movement
-			else{
-				if(((Math.abs(startX - LandingX) !=0) &&(Math.abs(startY - LandingY) ==0)) ||((Math.abs(startX - LandingX) ==0)&&(Math.abs(LandingY - startY)!=0))){
-					if (Math.abs(startX - LandingX) != 0) {
-						if (startX - LandingX > 0) {
-							for (int i = 0; i < DistanceX; i++) {
-								if (piecePresent(initialX - (i * 75), e.getY())) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						}
-						else {
-							for (int i = 0; i < DistanceX; i++) {
-								if (piecePresent(initialX + (i * 75), e.getY())) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						}
-					}
-					else {
-						if (startY - LandingY > 0) {
-							for (int i = 0; i < DistanceY; i++) {
-								if (piecePresent(e.getX(), initialY - (i * 75))) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						}
-
-						else {
-							for (int i = 0; i < DistanceY; i++) {
-								if (piecePresent(e.getX(), initialY + (i * 75))) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						}
-					}
-				}//End of Forward Back Left Right Movement
-				//Diagnoal movement
-				if((Math.abs(startX-LandingX) == Math.abs(startY - LandingY))){
-					if((startX- LandingX < 0) &&(startY - LandingY < 0)){
-						for(int i = 0; i < DistanceX; i++){
-							if(piecePresent((initialX + (i*75)), (initialY + (i*75)))){
-								PieceInTheWay = true;
-
-							}
-						}
-					}
-					else if((startX-LandingX<0)&&(startY-LandingY > 0)){
-						for(int i = 0; i < DistanceX; i++){
-							if(piecePresent((initialX + (i*75)), (initialY - (i*75)))){
-								PieceInTheWay = true;
-							}
-						}
-					}
-					else if((startX - LandingX > 0) &&(startY - LandingY > 0)){
-						for(int i = 0; i < DistanceX; i++){
-							if(piecePresent((initialX - (i*75)), (initialY - (i*75)))){
-								PieceInTheWay = true;
-							}
-						}
-					}
-					else if((startX - LandingX >0) && (startY - LandingY < 0)){
-						for(int i = 0; i < DistanceX; i++){
-							if(piecePresent((initialX - (i*75)), (initialY + (i*75)))){
-								PieceInTheWay = true;
-							}
-						}
-					}
-				}//End of Diagnoal Movement
-
-				if(PieceInTheWay){
+				{
 					validMove = false;
 				}
-
-				else{
-					if(piecePresent(e.getX(), (e.getY()))){
-						if(pieceName.contains("White")){
-							if(checkWhiteOponent(e.getX(), e.getY())){
-								validMove = true;
-							}
-
-							else{
-								validMove = false;
-							}
-						}
-
-						else{
-							if(checkBlackOponent(e.getX(), e.getY())){
-								validMove = true;
-							}
-							else{
-								validMove = false;
-							}
-						}
-					}
-					else{
-						validMove = true;
-					}
-				}
-
-
-			}//END OF FIRST ELSE
-		}// END OF QUEEN LINE
-//King ----------------------------------------------------------------------------------------------
-		else if (pieceName.contains("King")) {
-		if(!piecePresent(e.getX(), e.getY())){
-			if (pieceName.contains("BlackKing")) {
-
-				if ((MovementX >= 2) || (MovementY >= 2)) {
-					validMove = false;
-				} else if (((MovementX == 1) && (MovementY == 0)) || ((MovementX == 0) && (MovementY == 1))) {
-
-					if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
-						if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
-							validMove = false;
-						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
-							validMove = false;
-						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
-							validMove = true;
-						} else {
-							validMove = false;
-						}
-					} else if (!piecePresent(e.getX(), e.getY())) {
-						validMove = true;
-					}
-				} else if ((MovementX == 1) && (MovementY == 1)) {
-
-					if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
-						if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
-							validMove = true;
-						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
-							if ((pieceAround((e.getX() + 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX() - 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("WhitePawn"))) {
-								validMove = false;
-							} else {
-								validMove = false;
-							}
-						} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
-							validMove = true;
-						} else {
-							validMove = false;
-						}
-					} else if (!piecePresent(e.getX(), e.getY())) {
-						validMove = true;
-					}
-				}
-			}
-
-			if(pieceName.contains(("WhiteKing"))) {
-				if ((MovementX >= 2) || (MovementY >= 2)) {
-					validMove = false;
-				}
-
-				else if(((MovementX == 1) && (MovementY == 0 )) || ((MovementX == 0) && (MovementY ==1))){
-					if((pieceAround((e.getX()+75), e.getY()).contains("Black"))||(pieceAround((e.getX()-75), e.getY()).contains("Black"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Black"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Black"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Black"))){
-						if((pieceAround((e.getX()+75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()-75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Bishup"))){
-							validMove = false;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Rook"))||(pieceAround((e.getX()-75), e.getY()).contains("Rook"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Rook"))){
-							validMove = false;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Knight"))||(pieceAround((e.getX()-75), e.getY()).contains("Knight"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Knight"))){
-							validMove = true;
-						}
-
-
-						else{
-							validMove = false;
-						}
-					}
-
-					else if(!piecePresent(e.getX(), e.getY())){
-						validMove = true;
-					}
-				}
-
-				else if((MovementX == 1) && (MovementY == 1)){
-					if((pieceAround((e.getX()+75), e.getY()).contains("Black"))||(pieceAround((e.getX()-75), e.getY()).contains("Black"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Black"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Black"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Black"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Black"))){
-						if((pieceAround((e.getX()+75), e.getY()).contains("Rook"))||(pieceAround((e.getX()-75), e.getY()).contains("Rook"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Rook"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Rook"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Rook"))){
-							validMove = true;
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()-75), e.getY()).contains("Bishup"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Bishup"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Bishup"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Bishup"))){
-							if((pieceAround((e.getX()+75), e.getY()).contains("BlackPawn"))||(pieceAround((e.getX()-75), e.getY()).contains("BlackPawn"))||(pieceAround((e.getX()),(e.getY()+75)).contains("BlackPawn"))||(pieceAround((e.getX()), (e.getY()-75)).contains("BlackPawn"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("BlackPawn"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("BlackPawn"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("BlackPawn"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("BlackPawn"))){
-								validMove = false;
-							}
-
-							else{
-								validMove = false;
-							}
-						}
-
-						else if((pieceAround((e.getX()+75), e.getY()).contains("Knight"))||(pieceAround((e.getX()-75), e.getY()).contains("Knight"))||(pieceAround((e.getX()),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()), (e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("Knight"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("Knight"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("Knight"))){
-							validMove = true;
-						}
-					}
-
-					else if(!piecePresent(e.getX(), e.getY())){
-						validMove = true;
-					}
-				}
-			}
-		}
-			if(piecePresent(e.getX(), e.getY())){
-				if((MovementX >=2) || (MovementY >=2)){
-					validMove = false;
-				}
+				// Forward Back LEFT RIGHT movement
 				else {
-					if (piecePresent(e.getX(), e.getY())) {
-						if (pieceName.contains("White")) {
-							if (checkWhiteOponent(e.getX(), e.getY())) {
-								validMove = true;
-								if((pieceAround((e.getX()+75), e.getY()).contains("King"))||(pieceAround((e.getX()-75), e.getY()).contains("King"))||(pieceAround((e.getX()),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()), (e.getY()-75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("King"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("King"))){
-									validMove = false;
-								}
+					if (((Math.abs(startX - LandingX) != 0) && (Math.abs(startY - LandingY) == 0)) || ((Math.abs(startX - LandingX) == 0) && (Math.abs(LandingY - startY) != 0))) {
+						if (Math.abs(startX - LandingX) != 0) {
+							if (startX - LandingX > 0) {
+								for (int i = 0; i < DistanceX; i++) {
+									if (piecePresent(initialX - (i * 75), e.getY())) {
+										PieceInTheWay = true;
+										break;
 
-							} else {
-								validMove = false;
-							}
-						} else {
-							if (checkBlackOponent(e.getX(), e.getY())) {
-								validMove = true;
-								if((pieceAround((e.getX()+75), e.getY()).contains("King"))||(pieceAround((e.getX()-75), e.getY()).contains("King"))||(pieceAround((e.getX()),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()), (e.getY()-75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()-75),(e.getY()+75)).contains("King"))||(pieceAround((e.getX()+75),(e.getY()-75)).contains("King"))||(pieceAround((e.getX()-75), (e.getY()-75)).contains("King"))){
-									validMove = false;
+									} else {
+										PieceInTheWay = false;
+									}
 								}
 							} else {
-								validMove = false;
-							}
-						}
-					} else {
-						validMove = true;
-					}
-				}
-			}
-		}//End of King lines
-//King ----------------------------------------------------------------------------------------------
-//Rook ----------------------------------------------------------------------------------------------
-		else if (pieceName.contains("Rook")) {
-			boolean PieceInTheWay = false;
-			int DistanceX = Math.abs(startX - LandingX);
-			int DistanceY = Math.abs(startY - LandingY);
+								for (int i = 0; i < DistanceX; i++) {
+									if (piecePresent(initialX + (i * 75), e.getY())) {
+										PieceInTheWay = true;
+										break;
 
-
-			if(((LandingX <0) || LandingX > 7)||((LandingY <0) || (LandingY >7))){
-					validMove = false;
-			}
-
-			else{
-				if(((Math.abs(startX - LandingX) !=0) &&(Math.abs(startY - LandingY) ==0)) ||((Math.abs(startX - LandingX) ==0)&&(Math.abs(LandingY - startY)!=0))) {
-					if (Math.abs(startX - LandingX) != 0) {
-						if (startX - LandingX > 0) {
-							for (int i = 0; i < DistanceX; i++) {
-								if (piecePresent(initialX - (i * 75), e.getY())) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
+									} else {
+										PieceInTheWay = false;
+									}
 								}
 							}
 						} else {
+							if (startY - LandingY > 0) {
+								for (int i = 0; i < DistanceY; i++) {
+									if (piecePresent(e.getX(), initialY - (i * 75))) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							} else {
+								for (int i = 0; i < DistanceY; i++) {
+									if (piecePresent(e.getX(), initialY + (i * 75))) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							}
+						}
+					}//End of Forward Back Left Right Movement
+					//Diagnoal movement
+					if ((Math.abs(startX - LandingX) == Math.abs(startY - LandingY))) {
+						if ((startX - LandingX < 0) && (startY - LandingY < 0)) {
 							for (int i = 0; i < DistanceX; i++) {
-								if (piecePresent(initialX + (i * 75), e.getY())) {
+								if (piecePresent((initialX + (i * 75)), (initialY + (i * 75)))) {
 									PieceInTheWay = true;
-									break;
 
-								} else {
-									PieceInTheWay = false;
+								}
+							}
+						} else if ((startX - LandingX < 0) && (startY - LandingY > 0)) {
+							for (int i = 0; i < DistanceX; i++) {
+								if (piecePresent((initialX + (i * 75)), (initialY - (i * 75)))) {
+									PieceInTheWay = true;
+								}
+							}
+						} else if ((startX - LandingX > 0) && (startY - LandingY > 0)) {
+							for (int i = 0; i < DistanceX; i++) {
+								if (piecePresent((initialX - (i * 75)), (initialY - (i * 75)))) {
+									PieceInTheWay = true;
+								}
+							}
+						} else if ((startX - LandingX > 0) && (startY - LandingY < 0)) {
+							for (int i = 0; i < DistanceX; i++) {
+								if (piecePresent((initialX - (i * 75)), (initialY + (i * 75)))) {
+									PieceInTheWay = true;
 								}
 							}
 						}
-					} else {
-						if (startY - LandingY > 0) {
-							for (int i = 0; i < DistanceY; i++) {
-								if (piecePresent(e.getX(), initialY - (i * 75))) {
-									PieceInTheWay = true;
-									break;
+					}//End of Diagnoal Movement
 
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						} else {
-							for (int i = 0; i < DistanceY; i++) {
-								if (piecePresent(e.getX(), initialY + (i * 75))) {
-									PieceInTheWay = true;
-									break;
-
-								} else {
-									PieceInTheWay = false;
-								}
-							}
-						}
-					}
 					if (PieceInTheWay) {
 						validMove = false;
-					}
-
-					else {
-						if (piecePresent(e.getX(), e.getY())) {
+					} else {
+						if (piecePresent(e.getX(), (e.getY()))) {
 							if (pieceName.contains("White")) {
 								if (checkWhiteOponent(e.getX(), e.getY())) {
 									validMove = true;
@@ -597,217 +366,388 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 							validMove = true;
 						}
 					}
+
+
+				}//END OF FIRST ELSE
+			}// END OF QUEEN LINE
+//King ----------------------------------------------------------------------------------------------
+			else if (pieceName.contains("King")) {
+				if (!piecePresent(e.getX(), e.getY())) {
+					if (pieceName.contains("BlackKing")) {
+
+						if ((MovementX >= 2) || (MovementY >= 2)) {
+							validMove = false;
+						} else if (((MovementX == 1) && (MovementY == 0)) || ((MovementX == 0) && (MovementY == 1))) {
+
+							if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
+								if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
+									validMove = false;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
+									validMove = false;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
+									validMove = true;
+								} else {
+									validMove = false;
+								}
+							} else if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						} else if ((MovementX == 1) && (MovementY == 1)) {
+
+							if ((pieceAround((e.getX() + 75), e.getY()).contains("White")) || (pieceAround((e.getX() - 75), e.getY()).contains("White")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("White")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("White")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("White"))) {
+								if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
+									validMove = true;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
+									if ((pieceAround((e.getX() + 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX() - 75), e.getY()).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("WhitePawn")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("WhitePawn")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("WhitePawn"))) {
+										validMove = false;
+									} else {
+										validMove = false;
+									}
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
+									validMove = true;
+								} else {
+									validMove = false;
+								}
+							} else if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						}
+					}
+
+					if (pieceName.contains(("WhiteKing"))) {
+						if ((MovementX >= 2) || (MovementY >= 2)) {
+							validMove = false;
+						} else if (((MovementX == 1) && (MovementY == 0)) || ((MovementX == 0) && (MovementY == 1))) {
+							if ((pieceAround((e.getX() + 75), e.getY()).contains("Black")) || (pieceAround((e.getX() - 75), e.getY()).contains("Black")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Black")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Black")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Black"))) {
+								if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
+									validMove = false;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
+									validMove = false;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
+									validMove = true;
+								} else {
+									validMove = false;
+								}
+							} else if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						} else if ((MovementX == 1) && (MovementY == 1)) {
+							if ((pieceAround((e.getX() + 75), e.getY()).contains("Black")) || (pieceAround((e.getX() - 75), e.getY()).contains("Black")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Black")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Black")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Black")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Black"))) {
+								if ((pieceAround((e.getX() + 75), e.getY()).contains("Rook")) || (pieceAround((e.getX() - 75), e.getY()).contains("Rook")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Rook")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Rook")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Rook"))) {
+									validMove = true;
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX() - 75), e.getY()).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Bishup")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Bishup")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Bishup"))) {
+									if ((pieceAround((e.getX() + 75), e.getY()).contains("BlackPawn")) || (pieceAround((e.getX() - 75), e.getY()).contains("BlackPawn")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("BlackPawn")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("BlackPawn")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("BlackPawn")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("BlackPawn")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("BlackPawn")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("BlackPawn"))) {
+										validMove = false;
+									} else {
+										validMove = false;
+									}
+								} else if ((pieceAround((e.getX() + 75), e.getY()).contains("Knight")) || (pieceAround((e.getX() - 75), e.getY()).contains("Knight")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("Knight")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("Knight")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("Knight"))) {
+									validMove = true;
+								}
+							} else if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						}
+					}
 				}
-					else{
+				if (piecePresent(e.getX(), e.getY())) {
+					if ((MovementX >= 2) || (MovementY >= 2)) {
+						validMove = false;
+					} else {
+						if (piecePresent(e.getX(), e.getY())) {
+							if (pieceName.contains("White")) {
+								if (checkWhiteOponent(e.getX(), e.getY())) {
+									validMove = true;
+									if ((pieceAround((e.getX() + 75), e.getY()).contains("King")) || (pieceAround((e.getX() - 75), e.getY()).contains("King")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("King")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("King")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("King"))) {
+										validMove = false;
+									}
+
+								} else {
+									validMove = false;
+								}
+							} else {
+								if (checkBlackOponent(e.getX(), e.getY())) {
+									validMove = true;
+									if ((pieceAround((e.getX() + 75), e.getY()).contains("King")) || (pieceAround((e.getX() - 75), e.getY()).contains("King")) || (pieceAround((e.getX()), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX()), (e.getY() - 75)).contains("King")) || (pieceAround((e.getX() + 75), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX() - 75), (e.getY() + 75)).contains("King")) || (pieceAround((e.getX() + 75), (e.getY() - 75)).contains("King")) || (pieceAround((e.getX() - 75), (e.getY() - 75)).contains("King"))) {
+										validMove = false;
+									}
+								} else {
+									validMove = false;
+								}
+							}
+						} else {
+							validMove = true;
+						}
+					}
+				}
+			}//End of King lines
+//King ----------------------------------------------------------------------------------------------
+//Rook ----------------------------------------------------------------------------------------------
+			else if (pieceName.contains("Rook")) {
+				boolean PieceInTheWay = false;
+				int DistanceX = Math.abs(startX - LandingX);
+				int DistanceY = Math.abs(startY - LandingY);
+
+
+				if (((LandingX < 0) || LandingX > 7) || ((LandingY < 0) || (LandingY > 7))) {
+					validMove = false;
+				} else {
+					if (((Math.abs(startX - LandingX) != 0) && (Math.abs(startY - LandingY) == 0)) || ((Math.abs(startX - LandingX) == 0) && (Math.abs(LandingY - startY) != 0))) {
+						if (Math.abs(startX - LandingX) != 0) {
+							if (startX - LandingX > 0) {
+								for (int i = 0; i < DistanceX; i++) {
+									if (piecePresent(initialX - (i * 75), e.getY())) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							} else {
+								for (int i = 0; i < DistanceX; i++) {
+									if (piecePresent(initialX + (i * 75), e.getY())) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							}
+						} else {
+							if (startY - LandingY > 0) {
+								for (int i = 0; i < DistanceY; i++) {
+									if (piecePresent(e.getX(), initialY - (i * 75))) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							} else {
+								for (int i = 0; i < DistanceY; i++) {
+									if (piecePresent(e.getX(), initialY + (i * 75))) {
+										PieceInTheWay = true;
+										break;
+
+									} else {
+										PieceInTheWay = false;
+									}
+								}
+							}
+						}
+						if (PieceInTheWay) {
+							validMove = false;
+						} else {
+							if (piecePresent(e.getX(), e.getY())) {
+								if (pieceName.contains("White")) {
+									if (checkWhiteOponent(e.getX(), e.getY())) {
+										validMove = true;
+									} else {
+										validMove = false;
+									}
+								} else {
+									if (checkBlackOponent(e.getX(), e.getY())) {
+										validMove = true;
+									} else {
+										validMove = false;
+									}
+								}
+							} else {
+								validMove = true;
+							}
+						}
+					} else {
 						validMove = false;
 					}
 				}//END IF MATHS.ABS
 			}//END ELSE
-		//END ELSE IF CONTAINS
+			//END ELSE IF CONTAINS
 //Rook ----------------------------------------------------------------------------------------------
 //Bishop --------------------------------------------------------------------------------------------
-		else if(pieceName.contains("Bishup")){
+			else if (pieceName.contains("Bishup")) {
 
-			boolean PieceInTheWay = false;
-			int Distance = Math.abs(startX-LandingX);
+				boolean PieceInTheWay = false;
+				int Distance = Math.abs(startX - LandingX);
 
-			if(((LandingX < 0 ) ||(LandingX > 7)) || ((LandingY < 0) || (LandingY > 7))){
-				validMove = false;
-			}
-			else if (Math.abs(startX-LandingX) == Math.abs(startY - LandingY)){
-				if((startX- LandingX < 0) &&(startY - LandingY < 0)){
-					for(int i = 0; i < Distance; i++){
-						if(piecePresent((initialX + (i*75)), (initialY + (i*75)))){
-							PieceInTheWay = true;
-
-						}
-					}
-				}
-
-
-				else if((startX-LandingX<0)&&(startY-LandingY > 0)){
-					for(int i = 0; i < Distance; i++){
-						if(piecePresent((initialX + (i*75)), (initialY - (i*75)))){
-							PieceInTheWay = true;
-						}
-					}
-				}
-
-				else if((startX - LandingX > 0) &&(startY - LandingY > 0)){
-					for(int i = 0; i < Distance; i++){
-						if(piecePresent((initialX - (i*75)), (initialY - (i*75)))){
-							PieceInTheWay = true;
-						}
-					}
-				}
-
-				else if((startX - LandingX >0) && (startY - LandingY < 0)){
-					for(int i = 0; i < Distance; i++){
-						if(piecePresent((initialX - (i*75)), (initialY + (i*75)))){
-							PieceInTheWay = true;
-						}
-					}
-				}
-
-				if(PieceInTheWay){
+				if (((LandingX < 0) || (LandingX > 7)) || ((LandingY < 0) || (LandingY > 7))) {
 					validMove = false;
-				}
+				} else if (Math.abs(startX - LandingX) == Math.abs(startY - LandingY)) {
+					if ((startX - LandingX < 0) && (startY - LandingY < 0)) {
+						for (int i = 0; i < Distance; i++) {
+							if (piecePresent((initialX + (i * 75)), (initialY + (i * 75)))) {
+								PieceInTheWay = true;
 
-				else{
-					if(piecePresent(e.getX(), (e.getY()))){
-						if(pieceName.contains("White")){
-							if(checkWhiteOponent(e.getX(), e.getY())){
-								validMove = true;
-							}
-
-							else{
-								validMove = false;
 							}
 						}
-
-						else{
-							if(checkBlackOponent(e.getX(), e.getY())){
-								validMove = true;
+					} else if ((startX - LandingX < 0) && (startY - LandingY > 0)) {
+						for (int i = 0; i < Distance; i++) {
+							if (piecePresent((initialX + (i * 75)), (initialY - (i * 75)))) {
+								PieceInTheWay = true;
 							}
-							else{
-								validMove = false;
+						}
+					} else if ((startX - LandingX > 0) && (startY - LandingY > 0)) {
+						for (int i = 0; i < Distance; i++) {
+							if (piecePresent((initialX - (i * 75)), (initialY - (i * 75)))) {
+								PieceInTheWay = true;
+							}
+						}
+					} else if ((startX - LandingX > 0) && (startY - LandingY < 0)) {
+						for (int i = 0; i < Distance; i++) {
+							if (piecePresent((initialX - (i * 75)), (initialY + (i * 75)))) {
+								PieceInTheWay = true;
 							}
 						}
 					}
-					else{
-						validMove = true;
+
+					if (PieceInTheWay) {
+						validMove = false;
+					} else {
+						if (piecePresent(e.getX(), (e.getY()))) {
+							if (pieceName.contains("White")) {
+								if (checkWhiteOponent(e.getX(), e.getY())) {
+									validMove = true;
+								} else {
+									validMove = false;
+								}
+							} else {
+								if (checkBlackOponent(e.getX(), e.getY())) {
+									validMove = true;
+								} else {
+									validMove = false;
+								}
+							}
+						} else {
+							validMove = true;
+						}
 					}
-				}
-			}// End for ELSE IF MATHS.ABS
-		}//End of Bishop
+				}// End for ELSE IF MATHS.ABS
+			}//End of Bishop
 //Bishop --------------------------------------------------------------------------------------------
 //KNIGHT --------------------------------------------------------------------------------------------
-		else if (pieceName.contains("Knight")) {
-			if ((((MovementX == 1) && MovementY == 2)) || ((MovementX == 2) && (MovementY == 1))) {
-				if (!piecePresent(e.getX(), e.getY())) {
-					validMove = true;
-				} else {
-					if (pieceName.contains("White")) {
-						if (checkWhiteOponent(e.getX(), e.getY())) {
-							validMove = true;
-						}
+			else if (pieceName.contains("Knight")) {
+				if ((((MovementX == 1) && MovementY == 2)) || ((MovementX == 2) && (MovementY == 1))) {
+					if (!piecePresent(e.getX(), e.getY())) {
+						validMove = true;
 					} else {
-						if (checkBlackOponent(e.getX(), e.getY())) {
-							validMove = true;
+						if (pieceName.contains("White")) {
+							if (checkWhiteOponent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						} else {
+							if (checkBlackOponent(e.getX(), e.getY())) {
+								validMove = true;
+							}
 						}
 					}
 				}
 			}
-		}
 //KNIGHT --------------------------------------------------------------------------------------------
 //BLACK PAWN ----------------------------------------------------------------------------------------
-		else if (pieceName.equals("BlackPawn")){
-			if(startY ==6){
-				if(((MovementY==1)||(MovementY ==2))&&(startY > LandingY)&&(MovementX ==0)){
-					if(MovementY == 2){
-						if((!piecePresent(e.getX(), e.getY()))&&(!piecePresent(e.getX(), e.getY()+75))){
-							validMove = true;
+			else if (pieceName.equals("BlackPawn")) {
+				if (startY == 6) {
+					if (((MovementY == 1) || (MovementY == 2)) && (startY > LandingY) && (MovementX == 0)) {
+						if (MovementY == 2) {
+							if ((!piecePresent(e.getX(), e.getY())) && (!piecePresent(e.getX(), e.getY() + 75))) {
+								validMove = true;
+							}
+						} else {
+							if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
 						}
-					}
-					else{
-						if(!piecePresent(e.getX(), e.getY())){
-							validMove = true;
-						}
-					}
-				}
-				else if((MovementY ==1)&&(startY > LandingY)&&(MovementX ==1)){
-					if(piecePresent(e.getX(), e.getY())){
-						if(checkBlackOponent(e.getX(), e.getY())){
-							validMove = true;
-							if(startY==1){
-								successBlackPawn = true;
+					} else if ((MovementY == 1) && (startY > LandingY) && (MovementX == 1)) {
+						if (piecePresent(e.getX(), e.getY())) {
+							if (checkBlackOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if (startY == 1) {
+									successBlackPawn = true;
 
+								}
 							}
 						}
 					}
-				}
-			}
-			else{
-				if(((MovementY==1))&&(startY > LandingY)&&(MovementX ==0)){
-					if((!piecePresent(e.getX(), e.getY()))&&(!piecePresent(e.getX(), e.getY()+75))){
-						validMove = true;
-					}
-				}
-				else if((MovementY ==1)&&(startY > LandingY)&&(MovementX ==1)){
-					if(piecePresent(e.getX(), e.getY())){
-						if(checkBlackOponent(e.getX(), e.getY())){
+				} else {
+					if (((MovementY == 1)) && (startY > LandingY) && (MovementX == 0)) {
+						if ((!piecePresent(e.getX(), e.getY())) && (!piecePresent(e.getX(), e.getY() + 75))) {
 							validMove = true;
-							if(startY == 1){
-								successBlackPawn=true;
+						}
+					} else if ((MovementY == 1) && (startY > LandingY) && (MovementX == 1)) {
+						if (piecePresent(e.getX(), e.getY())) {
+							if (checkBlackOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if (startY == 1) {
+									successBlackPawn = true;
+								}
 							}
 						}
 					}
 				}
 			}
-		}
 //BLACK PAWN ----------------------------------------------------------------------------------------
 //White Pawn ----------------------------------------------------------------------------------------
-		else if (pieceName.equals("WhitePawn")){
-			if(startY ==1) {
-				if (((MovementY == 1) || (MovementY == 2)) && (startY < LandingY) && (MovementX == 0)) {
-					if (MovementY == 2) {
+			else if (pieceName.equals("WhitePawn")) {
+				if (startY == 1) {
+					if (((MovementY == 1) || (MovementY == 2)) && (startY < LandingY) && (MovementX == 0)) {
+						if (MovementY == 2) {
+							if ((!piecePresent(e.getX(), e.getY())) && (!piecePresent(e.getX(), e.getY() - 75))) {
+								validMove = true;
+							}
+						} else {
+							if (!piecePresent(e.getX(), e.getY())) {
+								validMove = true;
+							}
+						}
+					} else if ((MovementY == 1) && (startY < LandingY) && (MovementX == 1)) {
+						if (piecePresent(e.getX(), e.getY())) {
+							if (checkWhiteOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if (startY == 6) {
+									successWhitePawn = true;
+
+								}
+							}
+						}
+					}
+				} else {
+					if (((MovementY == 1)) && (startY < LandingY) && (MovementX == 0)) {
 						if ((!piecePresent(e.getX(), e.getY())) && (!piecePresent(e.getX(), e.getY() - 75))) {
 							validMove = true;
 						}
-					} else {
-						if (!piecePresent(e.getX(), e.getY())) {
-							validMove = true;
-						}
-					}
-				} else if ((MovementY == 1) && (startY < LandingY) && (MovementX == 1)) {
-					if (piecePresent(e.getX(), e.getY())) {
-						if (checkWhiteOponent(e.getX(), e.getY())) {
-							validMove = true;
-							if (startY == 6) {
-								successWhitePawn = true;
-
+					} else if ((MovementY == 1) && (startY < LandingY) && (MovementX == 1)) {
+						if (piecePresent(e.getX(), e.getY())) {
+							if (checkWhiteOponent(e.getX(), e.getY())) {
+								validMove = true;
+								if (startY == 6) {
+									successWhitePawn = true;
+								}
 							}
 						}
 					}
 				}
-			}
-			else{
-				if(((MovementY==1))&&(startY < LandingY)&&(MovementX ==0)){
-					if((!piecePresent(e.getX(), e.getY()))&&(!piecePresent(e.getX(), e.getY()-75))){
-						validMove = true;
-					}
-				}
-				else if((MovementY ==1)&&(startY < LandingY)&&(MovementX ==1)){
-					if(piecePresent(e.getX(), e.getY())){
-						if(checkWhiteOponent(e.getX(), e.getY())){
-							validMove = true;
-							if(startY == 6){
-								successWhitePawn=true;
-							}
-						}
-					}
-				}
-			}
 
-		}
+			}
 //White Pawn ----------------------------------------------------------------------------------------
-		if(!validMove){
-			int location=0;
-			if(startY ==0){
+
+// ChessPiece Movement ------------------------------------------------------------------------------
+
+		if (!validMove) {
+			int location = 0;
+			if (startY == 0) {
 				location = startX;
+			} else {
+				location = (startY * 8) + startX;
 			}
-			else{
-				location  = (startY*8)+startX;
-			}
-			String pieceLocation = pieceName+".png";
-			pieces = new JLabel( new ImageIcon(pieceLocation) );
-			panels = (JPanel)chessBoard.getComponent(location);
-		    panels.add(pieces);
+			String pieceLocation = pieceName + ".png";
+			pieces = new JLabel(new ImageIcon(pieceLocation));
+			panels = (JPanel) chessBoard.getComponent(location);
+			panels.add(pieces);
 
-		}
-		else{
-			if(successWhitePawn){
-				int location = 56 + (e.getX()/75);
+		} else {
+			if (successWhitePawn) {
+				int location = 56 + (e.getX() / 75);
 
 				System.out.println("What Piece do you want to change the Pawn into ?");
 				System.out.println("Queen : 1");
@@ -816,81 +756,75 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				System.out.println("Rook : 4");
 				int UserInput = PawnUpgrade.nextInt();
 
-				if(UserInput == 1){
+				if (UserInput == 1) {
 
-					if (c instanceof JLabel){
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("WhiteQueen.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("WhiteQueen.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("WhiteQueen.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 				}
 
-				if(UserInput == 2){
+				if (UserInput == 2) {
 
-					if (c instanceof JLabel){
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("WhiteBishup.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("WhiteBishup.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("WhiteBishup.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 				}
 
-				if(UserInput == 3){
+				if (UserInput == 3) {
 
-					if (c instanceof JLabel){
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("WhiteKnight.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("WhiteKnight.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("WhiteKnight.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("WhiteKnight.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 				}
 
-				if(UserInput == 4){
+				if (UserInput == 4) {
 
-					if (c instanceof JLabel){
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("WhiteRook.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("WhiteRook.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("WhiteRook.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("WhiteRook.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 				}
-			}
-
-			else if (successBlackPawn){
-				int location = 0 + (e.getX()/75);
+			} else if (successBlackPawn) {
+				int location = 0 + (e.getX() / 75);
 				System.out.println("What Piece do you want to change the Pawn into ?");
 				System.out.println("Queen : 1");
 				System.out.println("Bishop : 2");
@@ -899,97 +833,90 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 				int UserInput = PawnUpgrade.nextInt();
 
 
-				if(UserInput == 1){
-					if (c instanceof JLabel){
+				if (UserInput == 1) {
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("BlackQueen.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("BlackQueen.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("BlackQueen.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("BlackQueen.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 
 				}
-				if(UserInput == 2){
-					if (c instanceof JLabel){
+				if (UserInput == 2) {
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("BlackBishup.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("BlackBishup.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("BlackBishup.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("BlackBishup.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 
 				}
 
-				if(UserInput == 3){
-					if (c instanceof JLabel){
+				if (UserInput == 3) {
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("BlackKnight.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("BlackKnight.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("BlackKnight.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("BlackKnight.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 
 				}
 
-				if(UserInput == 4){
-					if (c instanceof JLabel){
+				if (UserInput == 4) {
+					if (c instanceof JLabel) {
 						Container parent = c.getParent();
 						parent.remove(0);
-						pieces = new JLabel( new ImageIcon("BlackRook.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+						pieces = new JLabel(new ImageIcon("BlackRook.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
-					}
-					else{
-						Container parent = (Container)c;
-						pieces = new JLabel( new ImageIcon("BlackRook.png") );
-						parent = (JPanel)chessBoard.getComponent(location);
+					} else {
+						Container parent = (Container) c;
+						pieces = new JLabel(new ImageIcon("BlackRook.png"));
+						parent = (JPanel) chessBoard.getComponent(location);
 						parent.add(pieces);
 
 					}
 
 				}
-			}
+			} else {
+				if (c instanceof JLabel) {
+					Container parent = c.getParent();
+					parent.remove(0);
+					parent.add(chessPiece);
+				} else {
+					Container parent = (Container) c;
+					parent.add(chessPiece);
+				}
+				chessPiece.setVisible(true);
 
-			else{
-				if (c instanceof JLabel){
-	            	Container parent = c.getParent();
-	            	parent.remove(0);
-	            	parent.add( chessPiece );
-	        	}
-	        	else {
-	            	Container parent = (Container)c;
-	            	parent.add( chessPiece );
-	        	}
-	    		chessPiece.setVisible(true);
-
-				if(KingRemovedFromBoard != null){
+				if (KingRemovedFromBoard != null) {
 					JOptionPane.showMessageDialog(null, KingRemovedFromBoard);
 					System.exit(0);
 				}
 			}
-		}
-    }
+	}
+    }//On Mouse release
 
     public void mouseClicked(MouseEvent e) {
 
