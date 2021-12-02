@@ -2,6 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 
 /*
@@ -119,6 +120,206 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	/*
 		This method checks if there is a piece present on a particular square.
 	*/
+
+
+	private Stack FindWhitePieces(){
+
+		Stack squares = new Stack();
+		String icon;
+		int x;
+		int y;
+		String pieceName;
+
+		for(int i = 0; i < 600; i+=75){
+			for(int j = 0; j <600; j+=75){
+				y = i/75;
+				x = j/75;
+
+				Component tmp = chessBoard.findComponentAt(j, i);
+				if(tmp instanceof JLabel){
+					chessPiece = (JLabel)tmp;
+					icon = chessPiece.getIcon().toString();
+					pieceName = icon.substring(0,(icon.length()-4));
+					if(pieceName.contains("White")){
+						Square stmp = new Square(x,y, pieceName);
+						squares.push(stmp);
+					}
+				}
+			}
+		}
+
+		return squares;
+
+	}
+
+	private Stack FindBlackPieces(){
+
+		Stack squares = new Stack();
+		String icon;
+		int x;
+		int y;
+		String pieceName;
+
+		for(int i = 0; i < 600; i+=75) {
+			for (int j = 0; j < 600; j += 75) {
+				y = i / 75;
+				x = j / 75;
+
+				Component tmp = chessBoard.findComponentAt(j,i);
+				if(tmp instanceof JLabel ){
+					chessPiece = (JLabel) tmp;
+					icon = chessPiece.getIcon().toString();
+					pieceName = icon.substring(0, (icon.length()-4));
+
+					if(pieceName.contains("Black")) {
+						Square stmp = new Square(x, y, pieceName);
+						squares.push(stmp);
+					}
+				}
+			}
+		}
+
+		return squares;
+
+	}
+
+
+	private Stack getWhiteAttackingSquares(Stack pieces){
+
+		Stack temppiece;
+		while(!pieces.empty()){
+			Square s = (Square)pieces.pop();
+			String tmpString = s.getPieceName();
+
+
+			if(tmpString.contains("Knight")){
+
+
+				temppiece = getKnightMoves(s.getXcoordinate(), s.getYcoordinate(), s.getPieceName());
+				{
+					while(!temppiece.empty()){
+						Square tempKnight = (Square)temppiece.pop();
+						temppiece.push(tempKnight);
+					}
+				}
+			}
+
+			else if(tmpString.contains("Bishup")){
+
+			}
+
+			else if(tmpString.contains("Pawn")){
+
+			}
+
+			else if(tmpString.contains("Rook")){
+
+			}
+
+
+		}
+		return pieces;
+	}
+
+	//getKnightMoves
+	private Stack getKnightMoves(int x, int y, String pieces) {
+
+		Stack moves = new Stack();
+		Stack attacking = new Stack();
+
+		Square s = new Square(x + 1, y + 2);
+		moves.push(s);
+
+		Square s1 = new Square(x + 1, y - 2);
+		moves.push(s1);
+
+		Square s2 = new Square(x - 1, y + 2);
+		moves.push(s2);
+
+		Square s3 = new Square(x - 1, y - 2);
+		moves.push(s3);
+
+		Square s4 = new Square(x + 2, y + 1);
+		moves.push(s4);
+
+		Square s5 = new Square(x + 2, y - 1);
+		moves.push(s5);
+
+		Square s6 = new Square(x - 2, y + 1);
+		moves.push(s6);
+
+		Square s7 = new Square(x - 2, y - 1);
+		moves.push(s7);
+
+		for (int i = 0; i < 8; i++) {
+
+			Square tmp = (Square) moves.pop();
+
+			if ((tmp.getXcoordinate() < 0) || ((tmp.getXcoordinate() > 7) || ((tmp.getYcoordinate() < 0) || tmp.getYcoordinate() > 7))) {}
+
+			else if (piecePresent(((tmp.getXcoordinate() * 75) + 20), ((tmp.getYcoordinate() * 75) + 20))) {
+				if (pieces.contains("White")) {
+					if (checkWhiteOponent(((tmp.getXcoordinate() * 75) + 20), ((tmp.getYcoordinate() * 75) + 20))) {
+						attacking.push(tmp);
+					}
+					else {
+						System.out.println("Own Piece");
+					}
+				}
+				else {
+					if (checkBlackOponent(tmp.getXcoordinate(), tmp.getYcoordinate())){
+						attacking.push(tmp);
+					}
+				}
+			}
+
+			else {
+				attacking.push(tmp);
+			}
+		}
+
+
+		Stack tmp = attacking;
+		colourSquares(tmp);
+		return attacking;
+
+	}
+
+	//getPawnMoves
+	private Stack getRookMoves(int x, int y, String piece){
+
+		Square startingSquare = new Square(x,y,piece);
+		Stack moves = new Stack();
+		Move validM, validM2, validM3, validM4;
+
+
+		return moves;
+	}
+
+	private void colourSquares(Stack squares){
+
+		Border greenBorder = BorderFactory.createLineBorder(Color.GREEN, 3);
+		while(!squares.empty()){
+			Square s = (Square)squares.pop();
+			int location = s.getXcoordinate() + ((s.getYcoordinate())*8);
+			JPanel panel = (JPanel)chessBoard.getComponent(location);
+			panel.setBorder(greenBorder);
+		}
+
+	}
+
+	private  void resetBorders(){
+
+		Border empty = BorderFactory.createEmptyBorder();
+
+		for(int i  = 0; i < 64; i++) {
+
+			JPanel tmppanel = (JPanel) chessBoard.getComponent(i);
+			tmppanel.setBorder(empty);
+
+		}
+	}
+
 	private Boolean piecePresent(int x, int y){
 		Component c = chessBoard.findComponentAt(x, y);
 		return !(c instanceof JPanel);
@@ -943,3 +1144,7 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
         frame.setVisible(true);
      }
 }
+
+
+
+
