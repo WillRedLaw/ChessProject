@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.time.temporal.Temporal;
 import java.util.*;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -25,6 +26,14 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	JLabel pieces;
 	String KingRemovedFromBoard;
 	Boolean PlayerTurn = false;
+
+	Stack Temporary;
+
+	AIAgent agent;
+	Boolean agentwins;
+	Boolean whiteTwoMove = false;
+
+	public static int n;
 
 
 
@@ -115,6 +124,10 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 		pieces = new JLabel( new ImageIcon("BlackRook.png") );
 		panels = (JPanel)chessBoard.getComponent(63);
 	    panels.add(pieces);
+
+		agent = new AIAgent();
+		agentwins = false;
+		Temporary = new Stack();
     }
 
 	/*
@@ -318,6 +331,153 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 			tmppanel.setBorder(empty);
 
 		}
+	}
+
+	private void getLandingSqaures(Stack found){
+		Move tmp;
+		Square Landing;
+		Stack squares = new Stack();
+		while(!found.empty()){
+			tmp = (Move) found.pop();
+			Landing = (Square)tmp.getLanding();
+			squares.push(Landing);
+		}
+
+		colourSquares(squares);
+
+	}
+
+	private void PrintStack(Stack input){
+		Move m;
+		Square s, l;
+		while(!input.empty()){
+			m = (Move)input.pop();
+			s = (Square)m.getStart();
+			l = (Square)m.getLanding();
+
+			System.out.println("The possible move that was found is : ("+s.getXcoordinate()+" , "+s.getYcoordinate()+"), landing at ("+l.getXcoordinate()+" , "+l.getYcoordinate()+")");
+		}
+	}
+
+	private void makeAIMove(){
+
+		resetBorders();
+		layeredPane.validate();
+		layeredPane.repaint();
+
+		Stack white = FindWhitePieces();
+		Stack black = FindBlackPieces();
+		Stack CompleteMoves = new Stack();
+		Move tmp;
+
+
+		while(!white.empty()){
+
+			Square s = (Square) white.pop();
+			String tmpString = s.getPieceName();
+			Stack tmpMove = new Stack();
+			Stack temporary = new Stack();
+
+
+
+			if(tmpString.contains("Knight")){
+				tmpMove = getKnightMoves(s.getXcoordinate(), s.getYcoordinate(), s.getPieceName());
+			}
+
+			else if(tmpString.contains("Rook")){
+				tmpMove = getRookMoves(s.getXcoordinate(), s.getYcoordinate(), s.getPieceName());
+			}
+
+			//The rest
+
+			while(!tmpMove.empty()){
+				tmp = (Move)tmpMove.pop();
+				CompleteMoves.push(tmp);
+			}
+		}
+
+		Temporary = (Stack)CompleteMoves.clone();
+		getLandingSqaures(Temporary);
+		PrintStack(Temporary);
+
+		//If a valid move cannot be made, it is a stalemate so the came ends
+		if(CompleteMoves.size() == 0){
+			JOptionPane.showMessageDialog(null, "Cogratulations, you have placed the AI component in a Stale Mate Position");
+			System.exit(0);
+		}
+
+		else{
+			System.out.println("=============================================================");
+			Stack testing = new Stack();
+			while(!CompleteMoves.empty()){
+				Move tmpMove = (Move)CompleteMoves.pop();
+				Square s1 = (Square)tmpMove.getStart();
+				Square s2 = (Square)tmpMove.getLanding();
+				System.out.println("The "+s1.getPieceName()+" can move from ("+s1.getXcoordinate()+", "+s1.getYcoordinate()+") to the following square: ("+s2.getXcoordinate()+", "+s2.getYcoordinate()+")");
+				testing.push(tmpMove);
+			}
+			System.out.println("=============================================================");
+			Border redBorder = BorderFactory.createLineBorder(Color.RED, 3);
+			Move selectedMove = null;
+			if(n==1){
+				selectedMove = agent.nextBestMove(testing, black);
+			}
+
+			else{
+				selectedMove= agent.randomMove(testing);
+			}
+			Square startingPoint = (Square)selectedMove.getStart();
+			Square landingPoint = (Square)selectedMove.getLanding();
+			int startX1 = (startingPoint.getXcoordinate()*75)+20;
+			int startY1 = (startingPoint.getYcoordinate()*75)+20;
+			int landingX1 = (landingPoint.getXcoordinate()*75)+20;
+			int landingY1 = (landingPoint.getYcoordinate()*75)+20;
+			System.out.println("-------- Move "+startingPoint.getPieceName()+" ("+startingPoint.getXcoordinate()+", "+startingPoint.getYcoordinate()+") to ("+landingPoint.getXcoordinate()+", "+landingPoint.getYcoordinate()+")");
+
+			Component c  = (JLabel)chessBoard.findComponentAt(startX1, startY1);
+			Container parent = c.getParent();
+			parent.remove(c);
+			int panelID = (startingPoint.getYcoordinate() * 8)+startingPoint.getXcoordinate();
+			panels = (JPanel)chessBoard.getComponent(panelID);
+			panels.setBorder(redBorder);
+			parent.validate();
+
+			Component l = chessBoard.findComponentAt(landingX1, landingY1);
+			if(l instanceof JLabel){
+				Container parentlanding = l.getParent();
+				JLabel awaitingName = (JLabel)l;
+				String agentCaptured = awaitingName.getIcon().toString();
+				if(agentCaptured.contains("King")){
+					agentwins = true;
+				}
+				parentlanding.remove(l);
+				parentlanding.validate();
+				pieces = new JLabel( new ImageIcon(startingPoint.getPieceName()+".png") );
+				int landingPanelID = (landingPoint.getYcoordinate()*8)+landingPoint.getXcoordinate();
+				panels = (JPanel)chessBoard.getComponent(landingPanelID);
+				panels.add(pieces);
+				panels.setBorder(redBorder);
+				layeredPane.validate();
+				layeredPane.repaint();
+
+				if(agentwins){
+					JOptionPane.showMessageDialog(null, "The AI Agent has won!");
+					System.exit(0);
+				}
+			}
+			else{
+				pieces = new JLabel( new ImageIcon(startingPoint.getPieceName()+".png") );
+				int landingPanelID = (landingPoint.getYcoordinate()*8)+landingPoint.getXcoordinate();
+				panels = (JPanel)chessBoard.getComponent(landingPanelID);
+				panels.add(pieces);
+				panels.setBorder(redBorder);
+				layeredPane.validate();
+				layeredPane.repaint();
+			}
+		}
+
+		whiteTwoMove = false;
+
 	}
 
 	private Boolean piecePresent(int x, int y){
@@ -1136,12 +1296,25 @@ public class ChessProject extends JFrame implements MouseListener, MouseMotionLi
 	*/
     public static void main(String[] args) {
 
-        JFrame frame = new ChessProject();
+
+
+
+        ChessProject frame = new ChessProject();
         frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE );
         frame.pack();
         frame.setResizable(true);
         frame.setLocationRelativeTo( null );
         frame.setVisible(true);
+
+		Object[] options = {"Random Moves","Best Next Move","Based on Opponents Moves"};
+		 int n = JOptionPane.showOptionDialog(frame,"Lets play some Chess, choose your AI opponent","Introduction to AI Continuous Assessment", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,null,options,options[2]);
+		System.out.println("The selected variable is : "+n);
+		frame.makeAIMove();
+
+
+
+
+
      }
 }
 
